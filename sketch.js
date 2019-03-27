@@ -6,13 +6,13 @@ const view_ang = 45;
 const near = 0.1;
 const far = 1000;
 let rotation_const = 0.01;
-const zoom_lev = 25;
+const zoom_lev = 30;
 const init_max = 5;
 const viewX = 0 * zoom_lev;
-const viewY = -5 * zoom_lev;
+const viewY = 5 * zoom_lev;
 const viewZ = 5 * zoom_lev;
 const roughness = 0.5;
-const detail = 6;
+const detail = 7;
 const length = Math.pow(2, detail) + 1;
 const max = length - 1;
 const segment = 10;
@@ -26,9 +26,11 @@ const camera = new THREE.PerspectiveCamera(view_ang, ratio, near, far);
 camera.position.set(viewX, viewY, viewZ);
 camera.lookAt(0, 0, 0);
 
+// Creating and setting renderer
 const renderer = new THREE.WebGLRenderer();
 renderer.setSize(width, height);
 
+// Adding the onclick functionality
 const container = document.getElementById("main");
 container.appendChild(renderer.domElement);
 document.body.onclick = function(){
@@ -42,13 +44,27 @@ light.position.set(viewX, viewY, viewZ);
 scene.add(light);
 
 // Creating the plane
-const plane_geo = new THREE.PlaneGeometry(max, max, max, max);
+const plane_geo = new THREE.PlaneGeometry(max + 2, max + 2, max + 2, max + 2);
 const material = new THREE.MeshPhongMaterial({
-    color : 0xFFFFFF,
+    color : 0x2CFF34,
     wireframe : true
 });
 const plane = new THREE.Mesh(plane_geo, material);
 scene.add(plane);
+
+// Creating a ground to percive the land
+const dist = max * 1.5;
+const ground_geo = new THREE.PlaneGeometry(dist, dist, dist, dist);
+ground_geo.translate(0, 0, 0);
+ground_geo.rotateX(-Math.PI / 2);
+const ground_mat = new THREE.MeshLambertMaterial({
+    color : 0x654321
+})
+const ground = new THREE.Mesh(ground_geo, ground_mat);
+scene.add(ground);
+
+// Adding user controls
+const controls = new THREE.OrbitControls( camera, renderer.domElement);
 
 function init(){
     // Creating the array
@@ -65,12 +81,21 @@ function init(){
     vertices[0][max] = Math.random() * init_max;
     vertices[max][0] = Math.random() * init_max;
     vertices[max][max] = Math.random() * init_max;
+
+    // Rotating the plane to face us
+    plane.rotation.x -= Math.PI / 2;
+
+    // Setting the plane to update vertices
+    plane_geo.verticesNeedUpdate = true;
+
+    // Calling divide
+    divide(length_temp);
+    length_temp /= 2;
 }
 
 // Starting the square and diamond process
 function divide(size){
-    const half = Math.floor(size / 2);
-    const offset = Math.random() * roughness * size;
+    const half = Math.floor(size / 2); 
     if(half < 1){
         return;
     }
@@ -78,6 +103,8 @@ function divide(size){
     // Doing the square iteration
     for(let y = half; y <= max; y += size){
         for(let x = half; x <= max; x += size){
+            const scale = roughness * size;
+            const offset = Math.random() * scale - (scale / 2);
             square(x, y, half, offset);
         }
     }
@@ -89,6 +116,8 @@ function divide(size){
             x = half;
         }
         for(; x <= max; x += size){
+            const scale = roughness * size;
+            const offset = Math.random() * scale - (scale / 2);
             diamond(x, y, half, offset);
         }   
     }
@@ -96,25 +125,12 @@ function divide(size){
     // Setting the vertices of the plane to these vertices
     for(let y = 0; y < length; ++y){
         for(let x = 0; x < length; ++x){
-            plane_geo.vertices[y * length + x].z = vertices[y][x];
+            plane_geo.vertices[(y + 1) * (length + 2) + (x + 1)].z = vertices[y][x];
         }
     }
 
     // Forcing the plane to update the vertives dynamically
     plane_geo.verticesNeedUpdate = true;
-
-    let count = 0;
-    for(let i = 0; i < length; ++i){
-        for(let j = 0; j < length; ++j){
-            if(vertices[i][j] == 0){
-                ++count;
-            }
-        }
-    }
-
-    console.log(vertices);
-
-    console.log("Ratio of unfilled: " , count / (length * length));
 }
 
 // Function to check valid position
@@ -179,7 +195,6 @@ function diamond(x, y, size, offset){
         vertices[y][x] = new_height; 
     }
     else{
-        console.log("Coming here");
         vertices[y][x] = offset;
     }
 }
@@ -219,7 +234,6 @@ line_geo3.vertices.push(new THREE.Vector3(0, 0, 100));
 const line3 = new THREE.Line(line_geo3, line_mat3);
 scene.add(line3);
 
-
 // Adding fog
 scene.fog = new THREE.Fog(0xCC2F4F, near, far);
 
@@ -229,14 +243,9 @@ function animate(){
     renderer.render(scene, camera);
 
     // Rotating the plane
-    plane.rotation.x += rotation_const;
-
-    if(plane.rotation.x >= Math.PI / 4 || plane.rotation.x < 0){
-        rotation_const *= -1;
-    }
-
-    // plane.rotation.y += 0.02;
-    // plane.rotation.z += 0.04;
+    //plane.rotation.x += rotation_const;
+    // plane.rotation.y += rotation_const * 2;
+    // plane.rotation.z += rotation_const * 4;
 }
 
 animate();
