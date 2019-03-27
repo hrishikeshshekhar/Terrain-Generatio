@@ -1,10 +1,9 @@
-// Creating the plane when the texture loads
+// Creating the plane
 const plane_geo = new THREE.PlaneGeometry(max + 2, max + 2, max + 2, max + 2);
-const plane = new THREE.Mesh(plane_geo, ter_mat);
-scene.add(plane);
+let terrain;
 
 // Creating water at y = 0
-const dist = max;
+const dist = max + 2;
 const water_geo = new THREE.PlaneGeometry(dist, dist, dist, dist);
 water_geo.translate(0, 0, 0);
 water_geo.rotateX(-Math.PI / 2);
@@ -21,14 +20,59 @@ function init(){
 
     // Calling divide
     divide(max);
-
+    
     // Creating the texture
-    texture = createTexture(max + 2, max + 2, plane_geo.vertices);
+    texture = createTexture(max + 2, max + 2, vertices);
+
+    // Updating the plane vertices
+    updateVertices(plane_geo);
 }
 
+// A helper function to create the texture
 function createTexture(width, height, vertices){
-    console.log(vertices);
+    // Deciding on the starting and finishing colors 
+    const r1 = 50;
+    const g1 = 220;
+    const b1 = 100;
 
+    const r2 = 101;
+    const g2 = 67;
+    const b2 = 33;
+
+    // Finding the max height
+    const max_height = FindMax(vertices);
+
+    const map_size = width * height;
+    var data = new Uint8Array(map_size * 3);
+
+    for(let i = 0; i < width - 1; ++i){
+        for(let j = 0; j < height - 1; ++j){
+            const index = ((i + 1) * width + (j + 1)) * 3;
+            data[index] = Math.floor(r1 + (r2 - r1) * (vertices[i][j] / max_height));
+            data[index + 1] = Math.floor(g1 + (g2 - g1) * (vertices[i][j] / max_height));
+            data[index + 2] = Math.floor(b1 + (b2 - b1) * (vertices[i][j] / max_height)); 
+        }
+    }
+
+    const texture = new THREE.DataTexture(data, width, height, THREE.RGBFormat);
+    texture.needsUpdate = true;
+
+    console.log(texture);
+    return texture;
+}
+
+function FindMax(vertices){
+    // Iterating through the vertices
+    let max_size = 0;
+    for(let i = 0; i < vertices.length; ++i){
+        for(let j = 0; j < vertices.length; ++j){
+            const vertex = vertices[i][j];
+            if(vertex > max_size){
+                max_size = vertex;
+            }
+        }
+    }
+    return max_size;
 }
 
 function initializeConstants(){
@@ -47,12 +91,6 @@ function initializeConstants(){
     vertices[0][max] = init_min + Math.random() * (init_max - init_min);
     vertices[max][0] = init_min + Math.random() * (init_max - init_min);
     vertices[max][max] = init_min + Math.random() * (init_max - init_min);
-
-    // Rotating the plane to face us
-    plane.rotation.x -= Math.PI / 2;
-
-    // Setting the plane to update vertices
-    plane_geo.verticesNeedUpdate = true;
 }
 
 // Starting the square and diamond process
@@ -84,9 +122,6 @@ function divide(size){
             diamond(x, y, half, offset);
         }   
     }
-
-    // Updating the plane vertices
-    updateVertices();
 
     // Recursively calling itself
     divide(size / 2);
@@ -151,7 +186,6 @@ function square(x, y, size, offset){
 function diamond(x, y, size, offset){
     let sum = 0;
     let count = 0;
-    console.log(size);
     if(isValid(y, x + size)){
         sum += vertices[y][x + size];
         ++count;
@@ -178,17 +212,39 @@ function diamond(x, y, size, offset){
     }
 }
 
-// Adding fog
-scene.fog = new THREE.Fog(0xCC2F4F, near, far);
-
 // Function to animate
 function animate(){
     requestAnimationFrame(animate); 
     renderer.render(scene, camera);
 }
 
+// Function to init the plane
+function initPlane(){
+    // Creating the plane
+    const ter_mat_props = {
+        specular: 0xffffff,     
+        // wireframe : true,
+        map : texture
+    }
+
+    // Setting the plane to update vertices
+    plane_geo.verticesNeedUpdate = true;
+
+    // Creating the plane with the given texture
+    const ter_mat = new THREE.MeshStandardMaterial(ter_mat_props);    
+    let plane = new THREE.Mesh(plane_geo, ter_mat);
+    
+    // Rotating the plane to face us
+    plane.rotation.x -= Math.PI / 2;
+
+    scene.add(plane);
+}
+
 // Calling the init function
 init();
+
+// Init the plane
+initPlane();
 
 // Calling the animate function
 animate();
