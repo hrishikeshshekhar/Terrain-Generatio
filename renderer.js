@@ -36,6 +36,7 @@ const container = document.getElementById("main");
 container.appendChild(renderer.domElement);
 // document.body.onclick = function(){
 //     divide(length_temp);
+//     updateVertices();
 //     length_temp /= 2;
 // }
 
@@ -43,6 +44,11 @@ container.appendChild(renderer.domElement);
 const light = new THREE.DirectionalLight(0xFFFFFF, 1);
 light.position.set(viewX, viewY, viewZ);
 scene.add(light);
+
+// Creating a hemispherical light source
+const light2 = new THREE.HemisphereLight( 0xEEEEFF, 0x777788, 1);
+light.position.set(viewX, viewY, viewZ);
+scene.add(light2);
 
 // Adding user controls
 const controls = new THREE.OrbitControls( camera, renderer.domElement);

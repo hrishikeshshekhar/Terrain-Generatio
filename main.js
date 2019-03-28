@@ -32,7 +32,7 @@ function init(){
 function createTexture(width, height, vertices){
     // Deciding on the starting and finishing colors 
     const r1 = 50;
-    const g1 = 220;
+    const g1 = 255;
     const b1 = 100;
 
     const r2 = 101;
@@ -41,7 +41,7 @@ function createTexture(width, height, vertices){
 
     // Finding the max height
     const max_height = FindMax(vertices);
-
+    
     const map_size = width * height;
     var data = new Uint8Array(map_size * 3);
 
@@ -57,9 +57,9 @@ function createTexture(width, height, vertices){
             }
             else{
                 if(vertices[i - 1][j - 1] < 0){
-                    data[index] = 255;
+                    data[index] = 0;
                     data[index + 1] = 0;
-                    data[index + 2] = 0; 
+                    data[index + 2] = 255; 
                 }
                 else{
                     data[index] = Math.floor(r1 + (r2 - r1) * (vertices[i - 1][j - 1] / max_height));
@@ -230,7 +230,10 @@ function diamond(x, y, size, offset){
 
 // Function to animate
 function animate(){
+    // Requesting the next frame
     requestAnimationFrame(animate); 
+
+    // Rendering the scene
     renderer.render(scene, camera);
 }
 
