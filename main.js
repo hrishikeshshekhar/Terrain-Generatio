@@ -22,7 +22,7 @@ function init(){
     divide(max);
     
     // Creating the texture
-    texture = createTexture(max + 2, max + 2, vertices);
+    texture = createTexture(length + 2, length + 2, vertices);
 
     // Updating the plane vertices
     updateVertices(plane_geo);
@@ -45,12 +45,28 @@ function createTexture(width, height, vertices){
     const map_size = width * height;
     var data = new Uint8Array(map_size * 3);
 
-    for(let i = 0; i < width - 1; ++i){
-        for(let j = 0; j < height - 1; ++j){
-            const index = ((i + 1) * width + (j + 1)) * 3;
-            data[index] = Math.floor(r1 + (r2 - r1) * (vertices[i][j] / max_height));
-            data[index + 1] = Math.floor(g1 + (g2 - g1) * (vertices[i][j] / max_height));
-            data[index + 2] = Math.floor(b1 + (b2 - b1) * (vertices[i][j] / max_height)); 
+    // Colouring the normal area
+    for(let i = 0; i < width; ++i){
+        for(let j = 0; j < height; ++j){
+            // Flipping the orientation about the x - axis
+            const index = ((height - i - 1) * width + j) * 3;
+            if(i == 0 || j == 0 || i == width - 1 || j == height - 1){
+                data[index] = r1;
+                data[index + 1] = g1;
+                data[index + 2] = b1;
+            }
+            else{
+                if(vertices[i - 1][j - 1] < 0){
+                    data[index] = 255;
+                    data[index + 1] = 0;
+                    data[index + 2] = 0; 
+                }
+                else{
+                    data[index] = Math.floor(r1 + (r2 - r1) * (vertices[i - 1][j - 1] / max_height));
+                    data[index + 1] = Math.floor(g1 + (g2 - g1) * (vertices[i - 1][j - 1] / max_height));
+                    data[index + 2] = Math.floor(b1 + (b2 - b1) * (vertices[i - 1][j - 1] / max_height)); 
+                }
+            }
         }
     }
 
@@ -224,6 +240,7 @@ function initPlane(){
     const ter_mat_props = {
         specular: 0xffffff,     
         // wireframe : true,
+        // color : 0x00FF00
         map : texture
     }
 
