@@ -54,4 +54,22 @@ scene.add(light2);
 const controls = new THREE.OrbitControls( camera, renderer.domElement);
 
 // Adding fog
-scene.fog = new THREE.Fog(0xCC2F4F, near, far);
+scene.fog = new THREE.Fog(0xFFFFFF, near, far);
+
+// Adding the skybox
+const prefix = "./Skybox/"
+const loader = new THREE.CubeTextureLoader();
+loader.setPath(prefix);
+
+console.log("Here nibba");
+
+const urls = [
+    "Skybox/bluecloud_lf.jpg",
+    "Skybox/bluecloud_rt.jpg",
+    "Skybox/bluecloud_up.jpg",
+    "Skybox/bluecloud_dn.jpg",
+    "Skybox/bluecloud_bk.jpg",
+    "Skybox/bluecloud_ft.jpg",
+];
+
+scene.background = new THREE.CubeTextureLoader().load(urls);

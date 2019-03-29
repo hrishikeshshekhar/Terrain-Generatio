@@ -1,6 +1,6 @@
 // Creating the plane
 const plane_geo = new THREE.PlaneGeometry(max + 2, max + 2, max + 2, max + 2);
-let terrain;
+let terrain, plane;
 
 // Creating water at y = 0
 const dist = max + 2;
@@ -73,7 +73,6 @@ function createTexture(width, height, vertices){
     const texture = new THREE.DataTexture(data, width, height, THREE.RGBFormat);
     texture.needsUpdate = true;
 
-    console.log(texture);
     return texture;
 }
 
@@ -240,10 +239,7 @@ function animate(){
 // Function to init the plane
 function initPlane(){
     // Creating the plane
-    const ter_mat_props = {
-        specular: 0xffffff,     
-        // wireframe : true,
-        // color : 0x00FF00
+    const ter_mat_props = {    
         map : texture
     }
 
@@ -251,8 +247,8 @@ function initPlane(){
     plane_geo.verticesNeedUpdate = true;
 
     // Creating the plane with the given texture
-    const ter_mat = new THREE.MeshStandardMaterial(ter_mat_props);    
-    let plane = new THREE.Mesh(plane_geo, ter_mat);
+    const ter_mat = new THREE.MeshBasicMaterial(ter_mat_props);    
+    plane = new THREE.Mesh(plane_geo, ter_mat);
     
     // Rotating the plane to face us
     plane.rotation.x -= Math.PI / 2;
