@@ -30,15 +30,6 @@ function init(){
 
 // A helper function to create the texture
 function createTexture(width, height, vertices){
-    // Deciding on the starting and finishing colors 
-    const r1 = 50;
-    const g1 = 255;
-    const b1 = 100;
-
-    const r2 = 101;
-    const g2 = 67;
-    const b2 = 33;
-
     // Finding the max height
     const max_height = FindMax(vertices);
     
@@ -50,21 +41,90 @@ function createTexture(width, height, vertices){
         for(let j = 0; j < height; ++j){
             // Flipping the orientation about the x - axis
             const index = ((height - i - 1) * width + j) * 3;
+
+            // These points are the corner points : Sand
             if(i == 0 || j == 0 || i == width - 1 || j == height - 1){
-                data[index] = r1;
-                data[index + 1] = g1;
-                data[index + 2] = b1;
+                data[index] = 194;
+                data[index + 1] = 178;
+                data[index + 2] = 128;
             }
             else{
                 if(vertices[i - 1][j - 1] < 0){
-                    data[index] = 0;
-                    data[index + 1] = 0;
-                    data[index + 2] = 255; 
+                    data[index] = 194;
+                    data[index + 1] = 178;
+                    data[index + 2] = 128;
                 }
+                // Creating gradients of colors for each level
                 else{
-                    data[index] = Math.floor(r1 + (r2 - r1) * (vertices[i - 1][j - 1] / max_height));
-                    data[index + 1] = Math.floor(g1 + (g2 - g1) * (vertices[i - 1][j - 1] / max_height));
-                    data[index + 2] = Math.floor(b1 + (b2 - b1) * (vertices[i - 1][j - 1] / max_height)); 
+                    // Getting the height
+                    const height = vertices[i - 1][j - 1];
+                    const norm_height = height / max_height;
+
+                    // If height is  < 0.3 of max height : Sand brown
+                    if(norm_height < 0.25){
+                        // Deciding on the starting and finishing colors 
+                        const r1 = 62;
+                        const g1 = 86;
+                        const b1 = 61;
+
+                        const r2 = 95;
+                        const g2 = 99;
+                        const b2 = 80;
+
+                        // Setting the colors
+                        data[index] = Math.floor(r1 + (r2 - r1) * norm_height / 0.25);
+                        data[index + 1] = Math.floor(g1 + (g2 - g1) * norm_height / 0.25);
+                        data[index + 2] = Math.floor(b1 + (b2 - b1) * norm_height / 0.25); 
+                    }
+
+                    // If height is betweeen 0.3 and 0.7 : Greenish
+                    else if(norm_height < 0.5){
+                        // Deciding on the starting and finishing colors 
+                        const r1 = 95;
+                        const g1 = 99;
+                        const b1 = 80;
+
+                        const r2 = 155;
+                        const g2 = 177;
+                        const b2 = 189;
+
+                        // Setting the colors
+                        data[index] = Math.floor(r1 + (r2 - r1) * (norm_height - 0.25) / 0.25);
+                        data[index + 1] = Math.floor(g1 + (g2 - g1) * (norm_height - 0.25) / 0.25);
+                        data[index + 2] = Math.floor(b1 + (b2 - b1) * (norm_height - 0.25) / 0.25); 
+                    }
+
+                    // Highest peaks : Snowy peaks
+                    else if(norm_height < 0.75){
+                        const r1 = 155;
+                        const g1 = 177;
+                        const b1 = 189;
+
+                        const r2 = 181;
+                        const g2 = 205;
+                        const b2 = 214;
+
+                        // Setting the colors
+                        data[index] = Math.floor(r1 + (r2 - r1) * (norm_height - 0.5) / 0.25);
+                        data[index + 1] = Math.floor(g1 + (g2 - g1) * (norm_height - 0.5) / 0.25);
+                        data[index + 2] = Math.floor(b1 + (b2 - b1) * (norm_height - 0.5) / 0.25); 
+                    }
+
+                    // Peaks 
+                    else{
+                        const r1 = 181;
+                        const g1 = 205;
+                        const b1 = 214;
+
+                        const r2 = 209;
+                        const g2 = 229;
+                        const b2 = 231;
+
+                        // Setting the colors
+                        data[index] = Math.floor(r1 + (r2 - r1) * (norm_height - 0.75) / 0.25);
+                        data[index + 1] = Math.floor(g1 + (g2 - g1) * (norm_height - 0.75) / 0.25);
+                        data[index + 2] = Math.floor(b1 + (b2 - b1) * (norm_height - 0.75) / 0.25); 
+                    }
                 }
             }
         }

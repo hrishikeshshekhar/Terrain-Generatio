@@ -56,20 +56,23 @@ const controls = new THREE.OrbitControls( camera, renderer.domElement);
 // Adding fog
 scene.fog = new THREE.Fog(0xFFFFFF, near, far);
 
-// Adding the skybox
-const prefix = "./Skybox/"
-const loader = new THREE.CubeTextureLoader();
-loader.setPath(prefix);
-
-console.log("Here nibba");
-
+// Adding the urls
 const urls = [
     "Skybox/bluecloud_lf.jpg",
     "Skybox/bluecloud_rt.jpg",
-    "Skybox/bluecloud_up.jpg",
     "Skybox/bluecloud_dn.jpg",
-    "Skybox/bluecloud_bk.jpg",
+    "Skybox/bluecloud_up.jpg",
     "Skybox/bluecloud_ft.jpg",
+    "Skybox/bluecloud_bk.jpg",
 ];
+
+// const urls = [
+//     "Skybox2/plains-of-abraham_lf.tga",
+//     "Skybox2/plains-of-abraham_rt.tga",
+//     "Skybox2/plains-of-abraham_up.tga",
+//     "Skybox2/plains-of-abraham_dn.tga",
+//     "Skybox2/plains-of-abraham_ft.tga",
+//     "Skybox2/plains-of-abraham_bk.tga",
+// ];
 
 scene.background = new THREE.CubeTextureLoader().load(urls);
