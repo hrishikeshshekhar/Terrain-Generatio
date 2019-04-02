@@ -7,8 +7,8 @@ const near = 0.1;
 const far = 1000;
 let rotation_const = 0.01;
 const zoom_lev = 40;
-const init_min = 5;
-const init_max = 10;
+const init_min = 4;
+const init_max = 8;
 const viewX = 0 * zoom_lev;
 const viewY = 5 * zoom_lev;
 const viewZ = 5 * zoom_lev;
@@ -54,7 +54,7 @@ scene.add(light2);
 const controls = new THREE.OrbitControls( camera, renderer.domElement);
 
 // Adding fog
-scene.fog = new THREE.Fog(0xFFFFFF, near, far);
+// scene.fog = new THREE.Fog(0xFFFFFF, near, far);
 
 // Adding the urls
 const urls = [

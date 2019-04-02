@@ -60,8 +60,8 @@ function createTexture(width, height, vertices){
                     const height = vertices[i - 1][j - 1];
                     const norm_height = height / max_height;
 
-                    // If height is  < 0.3 of max height : Sand brown
-                    if(norm_height < 0.25){
+                    // If height is  < 0.4 of max height : Sand brown
+                    if(norm_height < 0.4){
                         // Deciding on the starting and finishing colors 
                         const r1 = 62;
                         const g1 = 86;
@@ -72,13 +72,13 @@ function createTexture(width, height, vertices){
                         const b2 = 80;
 
                         // Setting the colors
-                        data[index] = Math.floor(r1 + (r2 - r1) * norm_height / 0.25);
-                        data[index + 1] = Math.floor(g1 + (g2 - g1) * norm_height / 0.25);
-                        data[index + 2] = Math.floor(b1 + (b2 - b1) * norm_height / 0.25); 
+                        data[index] = Math.floor(r1 + (r2 - r1) * norm_height / 0.4);
+                        data[index + 1] = Math.floor(g1 + (g2 - g1) * norm_height / 0.4);
+                        data[index + 2] = Math.floor(b1 + (b2 - b1) * norm_height / 0.4); 
                     }
 
-                    // If height is betweeen 0.3 and 0.7 : Greenish
-                    else if(norm_height < 0.5){
+                    // If height is betweeen 0.4 and 0.65 : Greenish
+                    else if(norm_height < 0.65){
                         // Deciding on the starting and finishing colors 
                         const r1 = 95;
                         const g1 = 99;
@@ -89,13 +89,13 @@ function createTexture(width, height, vertices){
                         const b2 = 189;
 
                         // Setting the colors
-                        data[index] = Math.floor(r1 + (r2 - r1) * (norm_height - 0.25) / 0.25);
-                        data[index + 1] = Math.floor(g1 + (g2 - g1) * (norm_height - 0.25) / 0.25);
-                        data[index + 2] = Math.floor(b1 + (b2 - b1) * (norm_height - 0.25) / 0.25); 
+                        data[index] = Math.floor(r1 + (r2 - r1) * (norm_height - 0.4) / 0.25);
+                        data[index + 1] = Math.floor(g1 + (g2 - g1) * (norm_height - 0.4) / 0.25);
+                        data[index + 2] = Math.floor(b1 + (b2 - b1) * (norm_height - 0.4) / 0.25); 
                     }
 
                     // Highest peaks : Snowy peaks
-                    else if(norm_height < 0.75){
+                    else if(norm_height < 0.85){
                         const r1 = 155;
                         const g1 = 177;
                         const b1 = 189;
@@ -105,9 +105,9 @@ function createTexture(width, height, vertices){
                         const b2 = 214;
 
                         // Setting the colors
-                        data[index] = Math.floor(r1 + (r2 - r1) * (norm_height - 0.5) / 0.25);
-                        data[index + 1] = Math.floor(g1 + (g2 - g1) * (norm_height - 0.5) / 0.25);
-                        data[index + 2] = Math.floor(b1 + (b2 - b1) * (norm_height - 0.5) / 0.25); 
+                        data[index] = Math.floor(r1 + (r2 - r1) * (norm_height - 0.65) / 0.2);
+                        data[index + 1] = Math.floor(g1 + (g2 - g1) * (norm_height - 0.65) / 0.2);
+                        data[index + 2] = Math.floor(b1 + (b2 - b1) * (norm_height - 0.65) / 0.2); 
                     }
 
                     // Peaks 
@@ -121,9 +121,9 @@ function createTexture(width, height, vertices){
                         const b2 = 231;
 
                         // Setting the colors
-                        data[index] = Math.floor(r1 + (r2 - r1) * (norm_height - 0.75) / 0.25);
-                        data[index + 1] = Math.floor(g1 + (g2 - g1) * (norm_height - 0.75) / 0.25);
-                        data[index + 2] = Math.floor(b1 + (b2 - b1) * (norm_height - 0.75) / 0.25); 
+                        data[index] = Math.floor(r1 + (r2 - r1) * (norm_height - 0.85) / 0.15);
+                        data[index + 1] = Math.floor(g1 + (g2 - g1) * (norm_height - 0.85) / 0.15);
+                        data[index + 2] = Math.floor(b1 + (b2 - b1) * (norm_height - 0.85) / 0.15); 
                     }
                 }
             }
